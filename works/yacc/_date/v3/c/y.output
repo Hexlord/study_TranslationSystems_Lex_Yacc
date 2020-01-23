@@ -1,0 +1,102 @@
+Grammar
+
+    0 $accept: between $end
+
+    1 date: MONTH NUMBER ',' NUMBER
+
+    2 between: date '-' date
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+',' (44) 1
+'-' (45) 2
+error (256)
+NUMBER (258) 1
+MONTH (259) 1
+
+
+Nonterminals, with rules where they appear
+
+$accept (7)
+    on left: 0
+date (8)
+    on left: 1, on right: 2
+between (9)
+    on left: 2, on right: 0
+
+
+State 0
+
+    0 $accept: . between $end
+
+    MONTH  shift, and go to state 1
+
+    date     go to state 2
+    between  go to state 3
+
+
+State 1
+
+    1 date: MONTH . NUMBER ',' NUMBER
+
+    NUMBER  shift, and go to state 4
+
+
+State 2
+
+    2 between: date . '-' date
+
+    '-'  shift, and go to state 5
+
+
+State 3
+
+    0 $accept: between . $end
+
+    $end  shift, and go to state 6
+
+
+State 4
+
+    1 date: MONTH NUMBER . ',' NUMBER
+
+    ','  shift, and go to state 7
+
+
+State 5
+
+    2 between: date '-' . date
+
+    MONTH  shift, and go to state 1
+
+    date  go to state 8
+
+
+State 6
+
+    0 $accept: between $end .
+
+    $default  accept
+
+
+State 7
+
+    1 date: MONTH NUMBER ',' . NUMBER
+
+    NUMBER  shift, and go to state 9
+
+
+State 8
+
+    2 between: date '-' date .
+
+    $default  reduce using rule 2 (between)
+
+
+State 9
+
+    1 date: MONTH NUMBER ',' NUMBER .
+
+    $default  reduce using rule 1 (date)

@@ -1,0 +1,359 @@
+State 2 conflicts: 6 reduce/reduce
+State 7 conflicts: 1 shift/reduce
+State 8 conflicts: 2 shift/reduce
+State 21 conflicts: 1 shift/reduce
+State 22 conflicts: 2 shift/reduce
+
+
+Grammar
+
+    0 $accept: lines $end
+
+    1 lines: line
+    2      | lines line
+
+    3 line: id
+    4     | number
+    5     | sublist
+    6     | line ',' id
+    7     | line ',' number
+    8     | line ',' sublist
+    9     | line '\n'
+
+   10 sublist: '(' id ',' number ')'
+   11        | '(' number ',' id ')'
+
+   12 number: NUMBER
+   13       | number NUMBER
+
+   14 id: LETTER
+   15   | NUMBER
+   16   | id LETTER
+   17   | id NUMBER
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'\n' (10) 9
+'(' (40) 10 11
+')' (41) 10 11
+',' (44) 6 7 8 10 11
+error (256)
+LETTER (258) 14 16
+NUMBER (259) 12 13 15 17
+
+
+Nonterminals, with rules where they appear
+
+$accept (9)
+    on left: 0
+lines (10)
+    on left: 1 2, on right: 0 2
+line (11)
+    on left: 3 4 5 6 7 8 9, on right: 1 2 6 7 8 9
+sublist (12)
+    on left: 10 11, on right: 5 8
+number (13)
+    on left: 12 13, on right: 4 7 10 11 13
+id (14)
+    on left: 14 15 16 17, on right: 3 6 10 11 16 17
+
+
+state 0
+
+    0 $accept: . lines $end
+
+    LETTER  shift, and go to state 1
+    NUMBER  shift, and go to state 2
+    '('     shift, and go to state 3
+
+    lines    go to state 4
+    line     go to state 5
+    sublist  go to state 6
+    number   go to state 7
+    id       go to state 8
+
+
+state 1
+
+   14 id: LETTER .
+
+    $default  reduce using rule 14 (id)
+
+
+state 2
+
+   12 number: NUMBER .
+   15 id: NUMBER .
+
+    $end      reduce using rule 12 (number)
+    $end      [reduce using rule 15 (id)]
+    LETTER    reduce using rule 12 (number)
+    LETTER    [reduce using rule 15 (id)]
+    NUMBER    reduce using rule 12 (number)
+    NUMBER    [reduce using rule 15 (id)]
+    ','       reduce using rule 12 (number)
+    ','       [reduce using rule 15 (id)]
+    '\n'      reduce using rule 12 (number)
+    '\n'      [reduce using rule 15 (id)]
+    '('       reduce using rule 12 (number)
+    '('       [reduce using rule 15 (id)]
+    $default  reduce using rule 12 (number)
+
+
+state 3
+
+   10 sublist: '(' . id ',' number ')'
+   11        | '(' . number ',' id ')'
+
+    LETTER  shift, and go to state 1
+    NUMBER  shift, and go to state 2
+
+    number  go to state 9
+    id      go to state 10
+
+
+state 4
+
+    0 $accept: lines . $end
+    2 lines: lines . line
+
+    $end    shift, and go to state 11
+    LETTER  shift, and go to state 1
+    NUMBER  shift, and go to state 2
+    '('     shift, and go to state 3
+
+    line     go to state 12
+    sublist  go to state 6
+    number   go to state 7
+    id       go to state 8
+
+
+state 5
+
+    1 lines: line .
+    6 line: line . ',' id
+    7     | line . ',' number
+    8     | line . ',' sublist
+    9     | line . '\n'
+
+    ','   shift, and go to state 13
+    '\n'  shift, and go to state 14
+
+    $default  reduce using rule 1 (lines)
+
+
+state 6
+
+    5 line: sublist .
+
+    $default  reduce using rule 5 (line)
+
+
+state 7
+
+    4 line: number .
+   13 number: number . NUMBER
+
+    NUMBER  shift, and go to state 15
+
+    NUMBER    [reduce using rule 4 (line)]
+    $default  reduce using rule 4 (line)
+
+
+state 8
+
+    3 line: id .
+   16 id: id . LETTER
+   17   | id . NUMBER
+
+    LETTER  shift, and go to state 16
+    NUMBER  shift, and go to state 17
+
+    LETTER    [reduce using rule 3 (line)]
+    NUMBER    [reduce using rule 3 (line)]
+    $default  reduce using rule 3 (line)
+
+
+state 9
+
+   11 sublist: '(' number . ',' id ')'
+   13 number: number . NUMBER
+
+    NUMBER  shift, and go to state 15
+    ','     shift, and go to state 18
+
+
+state 10
+
+   10 sublist: '(' id . ',' number ')'
+   16 id: id . LETTER
+   17   | id . NUMBER
+
+    LETTER  shift, and go to state 16
+    NUMBER  shift, and go to state 17
+    ','     shift, and go to state 19
+
+
+state 11
+
+    0 $accept: lines $end .
+
+    $default  accept
+
+
+state 12
+
+    2 lines: lines line .
+    6 line: line . ',' id
+    7     | line . ',' number
+    8     | line . ',' sublist
+    9     | line . '\n'
+
+    ','   shift, and go to state 13
+    '\n'  shift, and go to state 14
+
+    $default  reduce using rule 2 (lines)
+
+
+state 13
+
+    6 line: line ',' . id
+    7     | line ',' . number
+    8     | line ',' . sublist
+
+    LETTER  shift, and go to state 1
+    NUMBER  shift, and go to state 2
+    '('     shift, and go to state 3
+
+    sublist  go to state 20
+    number   go to state 21
+    id       go to state 22
+
+
+state 14
+
+    9 line: line '\n' .
+
+    $default  reduce using rule 9 (line)
+
+
+state 15
+
+   13 number: number NUMBER .
+
+    $default  reduce using rule 13 (number)
+
+
+state 16
+
+   16 id: id LETTER .
+
+    $default  reduce using rule 16 (id)
+
+
+state 17
+
+   17 id: id NUMBER .
+
+    $default  reduce using rule 17 (id)
+
+
+state 18
+
+   11 sublist: '(' number ',' . id ')'
+
+    LETTER  shift, and go to state 1
+    NUMBER  shift, and go to state 23
+
+    id  go to state 24
+
+
+state 19
+
+   10 sublist: '(' id ',' . number ')'
+
+    NUMBER  shift, and go to state 25
+
+    number  go to state 26
+
+
+state 20
+
+    8 line: line ',' sublist .
+
+    $default  reduce using rule 8 (line)
+
+
+state 21
+
+    7 line: line ',' number .
+   13 number: number . NUMBER
+
+    NUMBER  shift, and go to state 15
+
+    NUMBER    [reduce using rule 7 (line)]
+    $default  reduce using rule 7 (line)
+
+
+state 22
+
+    6 line: line ',' id .
+   16 id: id . LETTER
+   17   | id . NUMBER
+
+    LETTER  shift, and go to state 16
+    NUMBER  shift, and go to state 17
+
+    LETTER    [reduce using rule 6 (line)]
+    NUMBER    [reduce using rule 6 (line)]
+    $default  reduce using rule 6 (line)
+
+
+state 23
+
+   15 id: NUMBER .
+
+    $default  reduce using rule 15 (id)
+
+
+state 24
+
+   11 sublist: '(' number ',' id . ')'
+   16 id: id . LETTER
+   17   | id . NUMBER
+
+    LETTER  shift, and go to state 16
+    NUMBER  shift, and go to state 17
+    ')'     shift, and go to state 27
+
+
+state 25
+
+   12 number: NUMBER .
+
+    $default  reduce using rule 12 (number)
+
+
+state 26
+
+   10 sublist: '(' id ',' number . ')'
+   13 number: number . NUMBER
+
+    NUMBER  shift, and go to state 15
+    ')'     shift, and go to state 28
+
+
+state 27
+
+   11 sublist: '(' number ',' id ')' .
+
+    $default  reduce using rule 11 (sublist)
+
+
+state 28
+
+   10 sublist: '(' id ',' number ')' .
+
+    $default  reduce using rule 10 (sublist)

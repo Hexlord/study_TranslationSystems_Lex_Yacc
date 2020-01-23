@@ -1,0 +1,2 @@
+	inc	alfa9[bx+si]-12	; bx - base, si - offset
+
